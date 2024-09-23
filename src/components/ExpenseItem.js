@@ -1,54 +1,46 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { TiDelete } from 'react-icons/ti';
-import { AppContext } from '../context/AppContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addExpenses, reduceExpenses, deleteExpenses} from '../state/budgetSlice';
 
 const ExpenseItem = (props) => {
-    const { dispatch, selectedCurrency } = useContext(AppContext);
-
+    const selectedCurrency = useSelector((state) => state.budget.selectedCurrency);
+    const dispatch = useDispatch();
+    const { id, cost, name } = props;
+  
     const handleDeleteExpense = () => {
-        dispatch({
-            type: 'DELETE_EXPENSE',
-            payload: props.id,
-        });
+      dispatch(deleteExpenses(id));
     };
-
-    const increaseAllocation = (name) => {
-        const expense = {
-            name: name,
-            cost: 10,
-        };
-
-        dispatch({
-            type: 'ADD_EXPENSE',
-            payload: expense
-        });
-
-    }
-
-    const decreaseAllocation = (name) => {
-        const expense = {
-            name: name,
-            cost: 10,
-        };
-
-        dispatch({
-            type: 'REMOVE_EXPENSE',
-            payload: expense
-        });
-
-    }
-
-
+  
+    const increaseAllocation = () => {
+      const expense = {
+        id: id,
+        name: name,
+        cost: cost + 10,
+      };
+  
+      dispatch(addExpenses(expense));
+    };
+  
+    const decreaseAllocation = () => {
+      const expense = {
+        id: id,
+        name: name,
+        cost: cost - 10,
+      };
+  
+      dispatch(reduceExpenses(expense));
+    };
+  
     return (
-        <tr>
-        <td>{props.name}</td>
-        <td>{selectedCurrency} {props.cost}</td>
-        <td><button onClick={event => increaseAllocation(props.name)}>+</button></td>
-        <td><button onClick={event=> decreaseAllocation(props.name)}>-</button></td>
-        <td><TiDelete size='1.5em' onClick={handleDeleteExpense}></TiDelete></td>
-        </tr>
+      <tr>
+        <td>{name}</td>
+        <td>{selectedCurrency} {cost}</td>
+        <td><button onClick={increaseAllocation}>+</button></td>
+        <td><button onClick={decreaseAllocation}>-</button></td>
+        <td><TiDelete size='1.5em' onClick={handleDeleteExpense} /></td>
+      </tr>
     );
-};
-
+}
 export default ExpenseItem;

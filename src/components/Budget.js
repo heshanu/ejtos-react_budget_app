@@ -1,26 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { AppContext } from '../context/AppContext';
+import React, {useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setBudget, cngCurrency } from '../state/budgetSlice';
 
 const Budget = () => {
-    const { budget, dispatch, currency, selectedCurrency } = useContext(AppContext);
-    const [updateBudget, setUpdateBudget] = useState(budget);
-    const [updateCurrency, setUpdateCurrency] = useState(selectedCurrency);
+   const budget = useSelector((state) => state.budget.budget);
+   const selectedCurrency = useSelector((state) => state.budget.selectedCurrency);
+   //store curreny in initial state
+   const currencyOptions = useSelector((state) => state.budget.currency); 
+   const dispatch = useDispatch();
+
+   const [updateBudget, setUpdateBudget] = useState(budget);
+   const [updateCurrency, setUpdateCurrency] = useState(selectedCurrency);
 
     const updateBudgetValue = (event) => {
         const newBudget = event.target.value;
         setUpdateBudget(newBudget);
-        dispatch({ type: 'SET_BUDGET', payload: newBudget });
-
-        console.log(`budget`, budget);
+        dispatch(setBudget(newBudget));
+        console.log(`budget`,budget);
         console.log(`updateBudget`, updateBudget);
     };
 
     const updateCurrencyValue = (event) => {
         const newCurrency = event.target.value;
         setUpdateCurrency(newCurrency);
-        dispatch({ type: 'CHG_CURRENCY', payload: newCurrency });
-
-        //alert(newCurrency);
+        dispatch(cngCurrency(newCurrency));
     };
 
     useEffect(() => {
@@ -44,7 +47,7 @@ const Budget = () => {
             <div className='alert alert-secondary'>
                 <span>Currency:</span>
                 <select value={updateCurrency} onChange={updateCurrencyValue}>
-                    {currency.map((curr, index) => (
+                    {currencyOptions.map((curr, index) => (
                         <option key={index} value={curr.id}>{curr.name}</option>
                     ))}
                 </select>

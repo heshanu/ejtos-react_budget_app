@@ -1,45 +1,42 @@
 
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../context/AppContext';
+import React, {useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addExpenses,reduceExpenses } from '../state/budgetSlice';
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining,budget, selectedCurrency} = useContext(AppContext);
-
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [action, setAction] = useState('');
 
+    const budget = useSelector((state) => state.budget.budget);
+    const selectedCurrency = useSelector((state) => state.budget.selectedCurrency);
+    const remaining=useSelector((state)=>state.budget.remaining);
+    const dispatch = useDispatch();
+
     const submitEvent = () => {
 
         if(cost > remaining) {
-                alert("The value cannot exceed remaining funds  £"+remaining);
+                alert("The value cannot exceed remaining funds"+selectedCurrency+remaining);
                 setCost("");
                 return;
             }
         if (cost > budget) {
-            alert("The value cannot exceed budget  £"+budget);
+            alert("The value cannot exceed budget"+selectedCurrency+budget);
             setCost("");
             return;
         }
         
-
-
         const expense = {
             name: name,
             cost: parseInt(cost),
-        };
-        
-        if(action === "Reduce") {
-            dispatch({
-                type: 'RED_EXPENSE',
-                payload: expense,
-            });
-        } else {
-                dispatch({
-                    type: 'ADD_EXPENSE',
-                    payload: expense,
-                });
-            }
+          };
+      
+          if (action === "Reduce") {
+            dispatch(reduceExpenses(expense));
+          } else {
+            dispatch(addExpenses(expense));
+          }
+            
     };
 
     return (
@@ -52,7 +49,7 @@ const AllocationForm = (props) => {
                 </div>
                   <select className="custom-select" id="inputGroupSelect01" onChange={(event) => setName(event.target.value)}>
                         <option defaultValue>Choose...</option>
-                        <option value="Marketing" name="marketing"> Marketing</option>
+                  <option value="Marketing" name="marketing"> Marketing</option>
                 <option value="Sales" name="sales">Sales</option>
                 <option value="Finance" name="finance">Finance</option>
                 <option value="HR" name="hr">HR</option>
