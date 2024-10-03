@@ -83,7 +83,8 @@ const budgetSlice = createSlice({
       };
     },
     cngCurrency: (state, action) => {
-      const currency = state.currency.find(currency => currency.id === action.payload);
+      const currency = 
+      state.currency.find(currency => currency.id === action.payload);
       if (currency) {
         return {
           ...state,

@@ -1,16 +1,21 @@
 import React, {useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setBudget, cngCurrency } from '../state/budgetSlice';
+import { changeUsername } from '../state/nameSlice';
 
 const Budget = () => {
    const budget = useSelector((state) => state.budget.budget);
    const selectedCurrency = useSelector((state) => state.budget.selectedCurrency);
    //store curreny in initial state
+
    const currencyOptions = useSelector((state) => state.budget.currency); 
-   const dispatch = useDispatch();
+   const setChangeUsername = useSelector((state) => state.username.username);
+
+   const dispatch = useDispatch(); 
 
    const [updateBudget, setUpdateBudget] = useState(budget);
    const [updateCurrency, setUpdateCurrency] = useState(selectedCurrency);
+   const [userName,setUserName]=useState(setChangeUsername);
 
     const updateBudgetValue = (event) => {
         const newBudget = event.target.value;
@@ -26,6 +31,12 @@ const Budget = () => {
         dispatch(cngCurrency(newCurrency));
     };
 
+    const handleUserName=()=>{
+        dispatch(setUserName("Umayanga"));
+        return changeUsername("Umayanga");
+
+    }
+
     useEffect(() => {
         setUpdateCurrency(selectedCurrency);
     }, [selectedCurrency]);
@@ -33,7 +44,8 @@ const Budget = () => {
     return (
         <>
             <div className='alert alert-secondary'>
-                <span>Budget: {updateCurrency}</span>
+                <button onClick={handleUserName}>Change User Name</button>
+                <span>{userName}:Budget: {updateCurrency}</span>
                 <input
                     required='required'
                     type='number'

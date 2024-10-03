@@ -4,12 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import budgetStore from './state/budgetStore';
-
+import store from './state/store';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-  <Provider store={budgetStore}>
+  <Provider store={store}>
   <App />
   </Provider>
     
